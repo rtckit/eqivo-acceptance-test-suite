@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<document type="freeswitch/xml">
+    <X-PRE-PROCESS cmd="set" data="name=acceptance-test-server" />
+    <section name="configuration" description="Various Configuration">
+        <configuration name="switch.conf" description="Core Configuration">
+            <settings>
+                <param name="switchname" value="freeswitch-$${name}" />
+                <param name="core-db-name" value="/tmp/core-$${name}.db" />
+            </settings>
+        </configuration>
+        <configuration name="modules.conf" description="Modules">
+            <modules>
+                <load module="mod_event_socket" />
+                <load module="mod_commands" />
+                <load module="mod_dialplan_xml" />
+                <load module="mod_dptools" />
+                <load module="mod_sofia" />
+                <load module="mod_tone_stream" />
+                <load module="mod_sndfile" />
+                <load module="mod_conference" />
+                <load module="mod_flite" />
+                <load module="mod_say_en" />
+                <load module="mod_soundtouch" />
+            </modules>
+        </configuration>
+        <configuration name="switch.conf" description="Core Configuration">
+            <settings>
+                <param name="loglevel" value="debug" />
+            </settings>
+        </configuration>
+        <configuration name="event_socket.conf" description="Socket Client">
+            <settings>
+                <param name="nat-map" value="false" />
+                <param name="listen-ip" value="0.0.0.0" />
+                <param name="listen-port" value="8021" />
+                <param name="password" value="Sup3rS3cr3t" />
+                <param name="apply-inbound-acl" value="0.0.0.0/0" />
+            </settings>
+        </configuration>
+        <configuration name="sofia.conf" description="SIP Stack">
+            <profiles>
+                <profile name="a">
+                    <gateways>
+                        <gateway name="b">
+                            <param name="username" value="a" />
+                            <param name="password" value="none" />
+                            <param name="proxy" value="127.0.0.3" />
+                            <param name="realm" value="127.0.0.3" />
+                            <param name="register" value="false" />
+                        </gateway>
+                    </gateways>
+                    <settings>
+                        <param name="auth-calls" value="false" />
+                        <param name="rtp-timer-name" value="soft" />
+                        <param name="rtp-ip" value="127.0.0.2" />
+                        <param name="sip-ip" value="127.0.0.2" />
+                    </settings>
+                </profile>
+                <profile name="b">
+                    <gateways>
+                        <gateway name="a">
+                            <param name="username" value="b" />
+                            <param name="password" value="none" />
+                            <param name="proxy" value="127.0.0.2" />
+                            <param name="realm" value="127.0.0.2" />
+                            <param name="register" value="false" />
+                        </gateway>
+                    </gateways>
+                    <settings>
+                        <param name="auth-calls" value="false" />
+                        <param name="rtp-timer-name" value="soft" />
+                        <param name="rtp-ip" value="127.0.0.3" />
+                        <param name="sip-ip" value="127.0.0.3" />
+                    </settings>
+                </profile>
+            </profiles>
+        </configuration>
+        <configuration name="http_cache.conf" description="SIP Stack">
+        </configuration>
+        <configuration name="conference.conf" description="Conference">
+            <profiles>
+                <profile name="eqivo">
+                    <param name="sound-prefix" value="$${base_dir}/sounds/en/us/callie" />
+                    <param name="tts-engine" value="flite" />
+                    <param name="tts-voice" value="slt" />
+                </profile>
+            </profiles>
+        </configuration>
+    </section>
+    <section name="directory" description="User Directory">
+        <domain name="127.0.0.2">
+            <user id="b">
+                <params>
+                    <param name="password" value="none" />
+                </params>
+            </user>
+        </domain>
+        <domain name="127.0.0.3">
+            <user id="a">
+                <params>
+                    <param name="password" value="none" />
+                </params>
+            </user>
+        </domain>
+    </section>
+    <section name="dialplan" description="Regex/XML Dialplan">
+        <context name="default">
+            <extension name="eqivo">
+                <condition field="destination_number" expression="^(.*)$">
+                    <action application="info" />
+                    <action application="enable_heartbeat" data="60" />
+                    <action application="socket" data="172.17.0.1:8084 async full" />
+                </condition>
+            </extension>
+        </context>
+    </section>
+</document>

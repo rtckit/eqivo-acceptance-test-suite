@@ -1,0 +1,37 @@
+{
+    "name": "rtckit/eqivo-acceptance-test-suite",
+    "version": "0.1.0",
+    "type": "project",
+    "require": {
+        "rtckit/eqivo": "*"
+    },
+    "require-dev": {
+        "clue/block-react": "^1.5",
+        "phpunit/phpunit": "^9.5",
+        "rtckit/slimswitch": "dev-main",
+        "spatie/docker": "^1.7"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "RTCKit\\Eqivo\\Tests\\Acceptance\\": "tests/acceptance"
+        }
+    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "rtckit/slimswitch",
+                "version": "dev-main",
+                "source": {
+                    "url": "https://github.com/rtckit/slimswitch",
+                    "type": "git",
+                    "reference": "origin/main"
+                }
+            }
+        }
+    ],
+    "scripts": {
+        "acceptance": "php -d memory_limit=-1 ./vendor/bin/phpunit --debug -c ./etc/acceptance.xml.dist",
+        "build-slimswitch": "./vendor/rtckit/slimswitch/bin/mkslim.sh -m mod_event_socket -m mod_commands -m mod_dialplan_xml -m mod_dptools -m mod_sofia -m mod_tone_stream -m mod_sndfile -m mod_conference -m mod_flite -m mod_say_en -m mod_soundtouch -i /usr/bin/fs_cli -s eqivo-slimswitch-test"
+    }
+}
