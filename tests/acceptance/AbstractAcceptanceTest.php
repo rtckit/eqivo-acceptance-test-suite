@@ -39,7 +39,7 @@ use function Clue\React\Block\await;
  */
 abstract class AbstractAcceptanceTest extends TestCase
 {
-    public const DOCKER_IMAGE_REPOSITORY = 'eqivo-slimswitch-test';
+    public const DOCKER_IMAGE_REPOSITORY = 'rtckit/eqivo-freeswitch';
 
     public const DOCKER_IMAGE_TAG = 'v1.10.7';
 

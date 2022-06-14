@@ -21,6 +21,8 @@
                 <load module="mod_flite" />
                 <load module="mod_say_en" />
                 <load module="mod_soundtouch" />
+                <load module="mod_amd" />
+                <load module="mod_avmd" />
             </modules>
         </configuration>
         <configuration name="switch.conf" description="Core Configuration">
