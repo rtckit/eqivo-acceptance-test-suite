@@ -1,9 +1,10 @@
 {
     "name": "rtckit/eqivo-acceptance-test-suite",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "type": "project",
     "require": {
-        "rtckit/eqivo": "*"
+        "rtckit/eqivo": "0.6.0",
+        "rtckit/ficore": "0.0.2"
     },
     "require-dev": {
         "clue/block-react": "^1.5",

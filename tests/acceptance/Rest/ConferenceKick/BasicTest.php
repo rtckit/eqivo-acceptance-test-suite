@@ -85,13 +85,12 @@ class BasicTest extends AbstractAcceptanceTest
             })
             ->then(function ($args): PromiseInterface {
                 self::$deferred['testConferenceKick/answer'] = new Deferred;
-
-                return self::$deferred['testConferenceKick/answer']->promise();
-            })
-            ->then(function ($args): PromiseInterface {
                 self::$deferred['testConferenceKick/enter'] = new Deferred;
 
-                return self::$deferred['testConferenceKick/enter']->promise();
+                return all([
+                    self::$deferred['testConferenceKick/answer']->promise(),
+                    self::$deferred['testConferenceKick/enter']->promise(),
+                ]);
             })
             ->then(function ($args) use ($bogusMembers): PromiseInterface {
                 self::$kicked = end(self::$members);

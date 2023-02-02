@@ -85,13 +85,12 @@ class BasicTest extends AbstractAcceptanceTest
             })
             ->then(function ($args): PromiseInterface {
                 self::$deferred['testConferenceHangup/answer'] = new Deferred;
-
-                return self::$deferred['testConferenceHangup/answer']->promise();
-            })
-            ->then(function ($args): PromiseInterface {
                 self::$deferred['testConferenceHangup/enter'] = new Deferred;
 
-                return self::$deferred['testConferenceHangup/enter']->promise();
+                return all([
+                    self::$deferred['testConferenceHangup/answer']->promise(),
+                    self::$deferred['testConferenceHangup/enter']->promise(),
+                ]);
             })
             ->then(function ($args) use ($bogusMembers): PromiseInterface {
                 self::$huped = end(self::$members);
@@ -117,7 +116,7 @@ class BasicTest extends AbstractAcceptanceTest
 
                 $deferred = new Deferred();
 
-                Loop::addTimer(3, function () use ($deferred) {
+                Loop::addTimer(5, function () use ($deferred) {
                     self::$esl->api((new ESL\Request\Api)->setParameters("conference conf xml_list"))
                         ->then(function ($response) use ($deferred) {
                             $deferred->resolve($response);

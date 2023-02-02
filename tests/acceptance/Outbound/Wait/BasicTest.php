@@ -62,6 +62,7 @@ class BasicTest extends AbstractAcceptanceTest
             })
             ->then(function ($args): PromiseInterface {
                 $delta = (self::$milestones['default/hangup'] - self::$milestones['default/answer'])/1e9;
+                self::$app->planConsumer->logger->info('Actual wait delta', [$delta]);
 
                 $this->assertTrue(($delta >= 5) && ($delta < 6));
 
@@ -86,6 +87,15 @@ class BasicTest extends AbstractAcceptanceTest
                     200, ['Content-Type' => 'application/xml'],
                     '<?xml version="1.0" encoding="UTF-8"?><Response>' .
                     '<Wait length="5" />' .
+                    '<Hangup />' .
+                    '</Response>'
+                );
+
+            case '/testWait/answer':
+                return new Response(
+                    200, ['Content-Type' => 'application/xml'],
+                    '<?xml version="1.0" encoding="UTF-8"?><Response>' .
+                    '<Wait length="15" />' .
                     '<Hangup />' .
                     '</Response>'
                 );
